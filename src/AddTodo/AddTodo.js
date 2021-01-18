@@ -15,12 +15,13 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     margin: '0px',
     justifyContent: 'center'
-},
+  },
 }));
 
 const AddTodo = (props) => {
   const classes = useStyles();
   const [error,setError] = useState('');
+  const gridItemClass = ' grid-item';
   let today = new Date();
   let dd = String(today.getDate()).padStart(2, '0');
   let mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -57,7 +58,7 @@ const AddTodo = (props) => {
                 name="todo_date"
                 type="date"
                 defaultValue={today}
-                className={classes.textField+' '+'grid-item'}
+                className={classes.textField+gridItemClass}
                 InputLabelProps={{
                   shrink: true,
                 }}
