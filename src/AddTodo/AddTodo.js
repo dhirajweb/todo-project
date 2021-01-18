@@ -41,6 +41,11 @@ const AddTodo = (props) => {
               isError = true;
             }
 
+            if(input === "") {
+              setError('Please fill the required fields');
+              isError = true;
+            }
+
             if(input && date !== null && !isError) {
               props.dispatch(addTodo(input, date))
               event.target.userInput.value = '';

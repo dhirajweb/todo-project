@@ -5,6 +5,7 @@ import { Paper, Grid, Modal, TextField, Button, Tabs, Tab, Switch } from '@mater
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import './TodoList.css'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,14 +52,19 @@ const TodoList = (props) => {
     const [modalId, setModalId] = useState(null);
     const [filterValue, setFilterValue] = useState(0);
     const [filteredData, setFilteredData] = useState(props.todos);
-    const [activeFilter, setActiveFilter] = useState(0)
+    const [activeFilter, setActiveFilter] = useState(0);
+    const [error, setError] = useState('');
+    const dateItemClass = ' dateItem'
     const classes = useStyles();
 
     const updateTodo = () => {
-        if(modalId !== null) {
-            props.dispatch(editTodo(modalId, updatedInput === null?modalMessage:updatedInput, updatedDate === null?modalDate:updatedDate));
+        if(updatedInput === "" || updatedInput === " ") {
+            setError('Please fill the required fields');
         }
-        setOpen(false);
+        if(modalId !== null && updatedInput !== "" && updatedDate !== "") {
+            props.dispatch(editTodo(modalId, updatedInput === null?modalMessage:updatedInput, updatedDate === null?modalDate:updatedDate));
+            setOpen(false);
+        }
     }
 
     const setStatus = (isComplete, id) => {
@@ -71,7 +77,9 @@ const TodoList = (props) => {
         setModalMessage(message);
         setModalDate(date);
         setModalId(id);
+        setError('');
         setOpen(true);
+
     }
 
     useEffect(() => {
@@ -106,9 +114,9 @@ const TodoList = (props) => {
                 onClose={e => setOpen(false)}
                 style={{display:'flex',alignItems:'center',justifyContent:'center'}}
             >
-                <form className={classes.paperModal}>
+                <div className={classes.paperModal}>
                     <Grid container className={classes.grid}>
-                        <Grid item xs={12} sm={6} md={6} lg={6}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                         <TextField
                             id='standard-basic'
                             type='text'
@@ -117,7 +125,7 @@ const TodoList = (props) => {
                             defaultValue={modalMessage}
                             label='Edit Todo'
                         /></Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={6}>
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
                         <TextField
                             id="date"
                             label="Edit Date"
@@ -125,16 +133,17 @@ const TodoList = (props) => {
                             type="date"
                             defaultValue={modalDate}
                             onChange={e => setUpdatedDate(e.target.value)}
-                            className={classes.textField}
+                            className={classes.textField + dateItemClass}
                             InputLabelProps={{
                                 shrink: true,
                             }}
                         /></Grid>
-                        <Button style={{marginTop: '20px'}} type='submit' onClick={() => updateTodo()} variant="contained" color="primary">
+                        <Button style={{marginTop: '20px'}} type='submit' onClick={e => updateTodo(e)} variant="contained" color="primary">
                         UPDATE
                         </Button>
                     </Grid>
-                </form>
+                    <span style={{fontSize:'10px',color:'red'}}>{error}</span>
+                </div>
             </Modal>
                 
             <Grid style={{marginTop: '20px'}} container className={classes.grid}>
